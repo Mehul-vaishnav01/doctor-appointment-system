@@ -2,6 +2,7 @@ import validator from "validator"
 import bcrypt from 'bcrypt'
 import {v2 as cloudinary} from "cloudinary"
 import doctorModel from "../models/doctor.model.js";
+import jwt from 'jsonwebtoken';
 
 async function addDoctor(req,res) {
     try {
@@ -83,4 +84,29 @@ async function addDoctor(req,res) {
     }
 }
 
-export {addDoctor}
+async function loginAdmin(req,res) {
+    try {
+        const{email,password}=req.body
+        if(email===process.env.ADMIN_EMAIL&&password==process.env.ADMIN_PASSWORD)
+        {
+            const token=jwt.sign(email+password,process.env.JWT_SECRET)
+            res.status(200).json({
+                token
+            })
+        }
+        else
+        {
+            res.status(400).json({
+                message:"Invalid Credintial"
+            })
+        }
+        
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({
+            message:error.message
+        })
+    }  
+}
+
+export {addDoctor,loginAdmin}
