@@ -8,7 +8,6 @@ async function addDoctor(req,res) {
     try {
         const {name, email, password, speciality, degree, experience, about, fees, address}=req.body;
         const imageFile=req.file;
-         console.log({ name , email , password , speciality , degree , experience , about , fees , address } , imageFile) ;
 
         if(!name || !email || !password || !speciality || !degree || !experience || !about || !fees || !address)
         {
@@ -84,29 +83,36 @@ async function addDoctor(req,res) {
     }
 }
 
-async function loginAdmin(req,res) {
+async function loginAdmin(req, res) {
     try {
-        const{email,password}=req.body
-        if(email===process.env.ADMIN_EMAIL&&password==process.env.ADMIN_PASSWORD)
-        {
-            const token=jwt.sign(email+password,process.env.JWT_SECRET)
-            res.status(200).json({
-                token
-            })
+        const { email, password } = req.body;
+
+        if (email === process.env.ADMIN_EMAIL &&password === process.env.ADMIN_PASSWORD) {
+            const token = jwt.sign(
+                { email },
+                process.env.JWT_SECRET,
+                { expiresIn: "1d" }
+            );
+
+            // Save token in cookie
+            res.cookie("token", token);
+
+            return res.status(200).json({
+                message: "Login Successfully"
+            });
         }
-        else
-        {
-            res.status(400).json({
-                message:"Invalid Credintial"
-            })
-        }
-        
+
+        return res.status(400).json({
+            message: "Invalid Credential"
+        });
+
     } catch (error) {
-        console.log(error)
+        console.log(error);
+
         return res.status(500).json({
-            message:error.message
-        })
-    }  
+            message: error.message
+        });
+    }
 }
 
 export {addDoctor,loginAdmin}

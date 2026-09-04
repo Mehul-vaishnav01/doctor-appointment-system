@@ -4,6 +4,7 @@ import 'dotenv/config'
 import connectDB from './src/config/mongodb.js';
 import connectCloudinary from './src/config/cloudinary.js';
 import adminRouter from './src/routes/admin.routes.js';
+import cookieParser from 'cookie-parser';
 
 //app config
 const app=express();
@@ -13,6 +14,7 @@ connectCloudinary();
 
 //middleware
 app.use(express.json())
+app.use(cookieParser())
 app.use(cors())
 
 //api end point
