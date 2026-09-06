@@ -28,7 +28,7 @@ const userSchema=new mongoose.Schema({
     },
     DOB:{
         type:Date,
-        default:"Not Selected"
+        default:null
     },
     phone:{
         type:String,
@@ -36,6 +36,6 @@ const userSchema=new mongoose.Schema({
     }
 })
 
-const userModel=mongoose.models.user||mongoose.modelodel('user',userSchema)
+const userModel=mongoose.models.user||mongoose.model('user',userSchema)
 
 export default userModel;

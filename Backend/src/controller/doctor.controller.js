@@ -1,4 +1,4 @@
-import doctorModel from "../models/doctor.model";
+import doctorModel from "../models/doctor.model.js";
 
 
 async function changeAvalablity(req,res) {
