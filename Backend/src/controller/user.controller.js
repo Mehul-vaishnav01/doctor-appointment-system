@@ -65,7 +65,7 @@ async function loginUser(req,res) {
         const user=await userModel.findOne({email})
 
         if(!user){
-            res.status(401).json({
+            return res.status(401).json({
                 message:"User doesn't exist"
             })
         }
@@ -75,12 +75,12 @@ async function loginUser(req,res) {
         if(isMatch)
         {
             const token=jwt.sign({id:user._id},process.env.JWT_SECRET);
-            res.status(200).json({
+            return res.status(200).json({
                 message:"Logged in sucessfully"
             })
         }
         else{
-            res.status(401).json({
+            return res.status(401).json({
                 message:"Invalid credentials"
             })
         }
@@ -91,6 +91,14 @@ async function loginUser(req,res) {
         return res.status(500).json({
             message: error.message
         });
+    }
+}
+
+async function getProfile(req,res) {
+    try {
+        
+    } catch (error) {
+        
     }
 }
 
