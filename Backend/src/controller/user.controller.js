@@ -75,6 +75,7 @@ async function loginUser(req,res) {
         if(isMatch)
         {
             const token=jwt.sign({id:user._id},process.env.JWT_SECRET);
+            res.cookie("token", token)
             return res.status(200).json({
                 message:"Logged in sucessfully"
             })
@@ -96,10 +97,17 @@ async function loginUser(req,res) {
 
 async function getProfile(req,res) {
     try {
-        
+        const userData=await userModel.findById(req.userId).select('-password');
+        return res.status(200).json({
+            userData
+        })
     } catch (error) {
-        
+        console.log(error);
+
+        return res.status(500).json({
+            message: error.message
+        });
     }
 }
 
-export {registerUser,loginUser}
+export {registerUser,loginUser,getProfile}

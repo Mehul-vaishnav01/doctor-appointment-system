@@ -14,11 +14,7 @@ async function authUser(req, res, next) {
             token,
             process.env.JWT_SECRET
         );
-        if (decoded.email !== process.env.ADMIN_EMAIL) {
-            return res.status(401).json({
-                message: "Token is Invalid"
-            });
-        }
+        req.userId=decoded.id
 
         next();
 
@@ -31,4 +27,4 @@ async function authUser(req, res, next) {
     }
 }
 
-export default authAdmin;
+export default authUser;
