@@ -114,17 +114,20 @@ async function getProfile(req,res) {
 
 async function updateProfile(req,res) {
     try {
-        const {userId,name,phone,address,dob,gender}=req.body
+        const userId = req.userId
+        const {name,phone,address,dob,gender}=req.body
         const imageFile=req.file
-
+        console.log("USER ID:", userId);
+console.log("DOB:", dob);
+console.log("BODY:", req.body);
         if(!name || !phone || !dob || !gender)
         {
-            return res.status(401).json({
+            return res.status(400).json({
                 message:"Data is missing"
             })
         }
 
-        await userModel.findByIdAndUpdate(userId,{name,phone,address: JSON.parse(address),dob,gender})
+        await userModel.findByIdAndUpdate(userId,{name,phone,address: JSON.parse(address),dob: new Date(dob),gender})
 
         if(imageFile)
         {
@@ -146,4 +149,4 @@ async function updateProfile(req,res) {
     }
 }
 
-export {registerUser,loginUser,getProfile}
+export {registerUser,loginUser,getProfile,updateProfile}

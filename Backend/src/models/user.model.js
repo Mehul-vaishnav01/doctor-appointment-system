@@ -26,7 +26,7 @@ const userSchema=new mongoose.Schema({
         type:String,
         default:"Not Selected"
     },
-    DOB:{
+    dob:{
         type:Date,
         default:null
     },
