@@ -31,8 +31,8 @@ const appointmentSchema=new mongoose.Schema({
         requried:true
     },
     date:{
-        type:String,
-        requried:true
+        type:Date,
+        default:Date.now()
     },
     cancelled:{
         type:Boolean,
