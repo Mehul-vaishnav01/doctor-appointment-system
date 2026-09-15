@@ -228,4 +228,23 @@ async function bookAppointment(req,res) {
         });
     }
 }
-export {registerUser,loginUser,getProfile,updateProfile,bookAppointment}
+
+//Api to fetch user appointment
+async function listAppointment(req,res) {
+    try {
+        const userId=req.userId
+        const appointments=await appointmentModel.find({userId})
+
+        res.status(200).json({
+            appointments
+        })
+    } catch (error) {
+        console.log(error);
+
+        return res.status(500).json({
+            message: error.message
+        });
+    }    
+}
+
+export {registerUser,loginUser,getProfile,updateProfile,bookAppointment,listAppointment}
