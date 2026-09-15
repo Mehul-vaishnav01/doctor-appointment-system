@@ -247,4 +247,45 @@ async function listAppointment(req,res) {
     }    
 }
 
-export {registerUser,loginUser,getProfile,updateProfile,bookAppointment,listAppointment}
+//api to cancel appointment
+async function cancelAppointment(req,res) {
+    try {
+        const userId=req.userId;
+        const {appointmentId}=req.body
+
+        const appointmentData=await appointmentModel.findById(appointmentId)
+        if(appointmentData.userId!=userId)
+        {
+            return res.status(401).json({
+                message:"Unothorized access"
+            })
+        }        
+        await appointmentModel.findByIdAndUpdate(appointmentId,{cancelled:true})
+
+        //relasing doc slot
+
+        const{docId,slotDate,slotTime}=appointmentData
+
+        const docData=await doctorModel.findById(docId)
+
+        let slots_booked=docData.slots_booked
+        slots_booked[slotDate]=slots_booked[slotDate].filter(e=> e!==slotTime)
+        await doctorModel.findByIdAndUpdate(docId,{slots_booked})
+        
+        return res.status(200).json({
+            message:"Appointment Cancelled"
+        })
+
+    } catch (error) {
+        console.log(error);
+
+        return res.status(500).json({
+            message: error.message
+        });
+    }    
+}
+
+
+// api to make payment using razorpay
+
+export {registerUser,loginUser,getProfile,updateProfile,bookAppointment,listAppointment,cancelAppointment}
