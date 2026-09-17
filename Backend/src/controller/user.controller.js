@@ -329,5 +329,33 @@ async function paymentRazorpay(req,res) {
     }
 }
 
+async function verifyRazorpay(req,res) {
+    try {
+        const {razorpay_order_id}=req.body
+        const orderInfo=await razorpayInstance.orders.fetch(razorpay_order_id)
+        console.log(orderInfo)
+        if(orderInfo.status==='paid')
+        {
+            await appointmentModel.findByIdAndUpdate(orderInfo.receipt,{payment:true})
+            return res.status(201).json({
+                message:"Payment Sucessful"
+            })
+        }
+        else
+        {
+            return res.status(401).json({
+                message:"Payment Failed"
+            })
+        }
 
-export {registerUser,loginUser,getProfile,updateProfile,bookAppointment,listAppointment,cancelAppointment,paymentRazorpay}
+    } catch (error) {
+        console.log(error);
+
+        return res.status(500).json({
+            message: error.message
+        });
+    }    
+}
+
+
+export {registerUser,loginUser,getProfile,updateProfile,bookAppointment,listAppointment,cancelAppointment,paymentRazorpay,verifyRazorpay}
