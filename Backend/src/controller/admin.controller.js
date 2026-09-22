@@ -4,6 +4,7 @@ import {v2 as cloudinary} from "cloudinary"
 import doctorModel from "../models/doctor.model.js";
 import jwt from 'jsonwebtoken';
 import appointmentModel from "../models/appointment.model.js";
+import userModel from "../models/user.model.js";
 
 async function addDoctor(req,res) {
     try {
@@ -148,4 +149,71 @@ async function appointmentAdmin (req,res) {
         });
      }    
 }
-export {addDoctor,loginAdmin,appointmentAdmin}
+
+
+//Api for cancel appointment
+async function appointmentCancel(req,res) {
+    try {
+        // const userId=req.userId;
+        const {appointmentId}=req.body
+
+        const appointmentData=await appointmentModel.findById(appointmentId)
+        // if(appointmentData.userId!=userId)
+        // {
+        //     return res.status(401).json({
+        //         message:"Unothorized access"
+        //     })
+        // }        
+        await appointmentModel.findByIdAndUpdate(appointmentId,{cancelled:true})
+
+        //relasing doc slot
+
+        const{docId,slotDate,slotTime}=appointmentData
+
+        const docData=await doctorModel.findById(docId)
+
+        let slots_booked=docData.slots_booked
+        slots_booked[slotDate]=slots_booked[slotDate].filter(e=> e!==slotTime)
+        await doctorModel.findByIdAndUpdate(docId,{slots_booked})
+        
+        return res.status(200).json({
+            message:"Appointment Cancelled"
+        })
+
+    } catch (error) {
+        console.log(error);
+
+        return res.status(500).json({
+            message: error.message
+        });
+    }    
+}
+
+
+//Api to get dashboard data for admin pannel
+async function adminDashboard(req,res) {
+    try {
+        const doctors=await doctorModel.find({});
+        const users=await userModel.find({});
+        const appointments=await appointmentModel.find({});
+
+        const dashData={
+            doctors:doctors.length,
+            appointments:appointments.length,
+            users:users.length,
+            latestAppointments:appointments.reverse().slice(0,5)
+
+        }
+        return res.status(200).json({
+            dashData
+        })
+
+    } catch (error) {
+        console.log(error);
+
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+}
+export {addDoctor,loginAdmin,appointmentAdmin,appointmentCancel,adminDashboard}

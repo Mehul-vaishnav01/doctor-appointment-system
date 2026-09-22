@@ -37,4 +37,13 @@ async function doctorList(req,res) {
         });
     }    
 }
+
+async function login(req,res) {
+    try {
+        const {email,password}=req.body
+        const
+    } catch (error) {
+        
+    }
+}
 export {changeAvalablity,doctorList}
