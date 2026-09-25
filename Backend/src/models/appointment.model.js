@@ -27,7 +27,7 @@ const appointmentSchema=new mongoose.Schema({
         requried:true
     },
     amount:{
-        type:String,
+        type:Number,
         requried:true
     },
     date:{

@@ -1,6 +1,7 @@
 import doctorModel from "../models/doctor.model.js";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken';
+import appointmentModel from "../models/appointment.model.js";
 
 async function changeAvalablity(req,res) {
     try {
@@ -42,7 +43,7 @@ async function doctorList(req,res) {
 async function loginDoctor(req,res) {
     try {
         const {email,password}=req.body
-        const doctor=await doctorModel.find({email})
+        const doctor=await doctorModel.findOne({email})
 
         if(!doctor)
         {
@@ -74,4 +75,6 @@ async function loginDoctor(req,res) {
         })
     }
 }
+
+
 export {changeAvalablity,doctorList,loginDoctor}
