@@ -75,6 +75,25 @@ async function loginDoctor(req,res) {
         })
     }
 }
+//api to get doctor appointment for doctor pannel
+async function appointmentsDoctor(req,res) {
+    try {
+        
+        const {docId}=req.body
+        const appointments=await appointmentModel.find({docId})
+
+        return res.status(200).json({
+            appointments
+        })
+
+    } catch (error) {
+        console.log(error);
+
+        return res.status(500).json({
+            message: error.message
+        })
+    }    
+}
 
 
-export {changeAvalablity,doctorList,loginDoctor}
+export {changeAvalablity,doctorList,loginDoctor,appointmentsDoctor}
