@@ -95,5 +95,37 @@ async function appointmentsDoctor(req,res) {
     }    
 }
 
+//Api to mark appointment completed
 
-export {changeAvalablity,doctorList,loginDoctor,appointmentsDoctor}
+async function appointmentCompleted(req,res) {
+    try {
+        const {docId,appointmentId}=req.body
+
+        const appointmentData=await appointmentModel.findById(appointmentId)
+
+        if(appointmentData &&appointmentData.docId===docId)
+        {
+            await appointmentModel.findByIdAndUpdate(appointmentId,{isCompleted:true})
+            return res.status(201).json({
+                message:"Appointmented Completed"
+            })
+        }
+        else
+        {
+            return res.status(400).json({
+                message:"Make Completed Failed"
+            })
+
+        }
+        
+    } catch (error) {
+        console.log(error);
+
+        return res.status(500).json({
+            message: error.message
+        })
+    }    
+}
+
+
+export {changeAvalablity,doctorList,loginDoctor,appointmentsDoctor,appointmentCompleted}

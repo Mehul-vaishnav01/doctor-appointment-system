@@ -8,7 +8,10 @@ const doctorRouter=express.Router();
 doctorRouter.get('/list',doctorList)
 doctorRouter.post('/login',loginDoctor)
 doctorRouter.get('/appointments',authDoctor,appointmentsDoctor)
+doctorRouter.post('/mark-completed',authDoctor,appointmentCompleted)
+
 
 
 
 export default doctorRouter
+
