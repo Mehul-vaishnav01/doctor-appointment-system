@@ -9,7 +9,8 @@ doctorRouter.get('/list',doctorList)
 doctorRouter.post('/login',loginDoctor)
 doctorRouter.get('/appointments',authDoctor,appointmentsDoctor)
 doctorRouter.post('/mark-completed',authDoctor,appointmentCompleted)
-
+doctorRouter.post('/mark-cancelled',authDoctor,appointmentCancel)
+doctorRouter.get('/dashboard',authDoctor,doctorDashboard)
 
 
 

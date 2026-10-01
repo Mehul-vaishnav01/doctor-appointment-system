@@ -127,5 +127,74 @@ async function appointmentCompleted(req,res) {
     }    
 }
 
+//Api to mark appointment cancel
+async function appointmentCancel(req,res) {
+    try {
+        const {docId,appointmentId}=req.body
 
-export {changeAvalablity,doctorList,loginDoctor,appointmentsDoctor,appointmentCompleted}
+        const appointmentData=await appointmentModel.findById(appointmentId)
+
+        if(appointmentData &&appointmentData.docId===docId)
+        {
+            await appointmentModel.findByIdAndUpdate(appointmentId,{cancelled:true})
+            return res.status(201).json({
+                message:"Appointmented Cancelled"
+            })
+        }
+        else
+        {
+            return res.status(400).json({
+                message:"Make cancellation Failed"
+            })
+
+        }
+        
+    } catch (error) {
+        console.log(error);
+
+        return res.status(500).json({
+            message: error.message
+        })
+    }    
+}
+
+async function doctorDashboard(req,res) {
+    try {
+        const {docId}=req.body
+        const appointments=await appointmentModel.find({docId})
+
+        let earnings=0;
+        appointments.map((item)=>{
+            if(item.isCompleted||item.payment)
+            {
+                earnings+=item.amount
+            }
+        })
+
+        let patients=[];
+        appointments.map((item)=>{
+            if(patients.includes(item.userId)){
+                patients.push(item.userId)
+            }
+        })
+
+        const dashData={
+            earnings,
+            appointments:appointments.length,
+            patients:patients.length,
+            latestAppointmets:appointments.reverse().slice(0,5)
+        }
+        return res.status(201).json({
+            dashData
+        })
+    } catch (error) {
+        console.log(error);
+
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+
+export {changeAvalablity,doctorList,loginDoctor,appointmentsDoctor,appointmentCompleted,doctorDashboard,appointmentCancel}
